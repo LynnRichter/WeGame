@@ -340,23 +340,23 @@
 }
 -(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
 {
-//    int i=0;
-//    for (UIView *view in self.view.subviews) {
-//        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
-//            NSLog(@"找到了%d",i);
-//            //            break;
-//        }
-//        if ([view isKindOfClass:[XCMultiTableView class]]) {
-//            NSLog(@"找到了XCMultiTableView %d",i);
-//            //            break;
-//        }
-//        
-//        
-//        i++;
-//    }
+    int i=0;
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
+            NSLog(@"找到了%d",i);
+            //            break;
+        }
+        if ([view isKindOfClass:[XCMultiTableView class]]) {
+            NSLog(@"找到了XCMultiTableView %d",i);
+            //            break;
+        }
+        
+        
+        i++;
+    }
     
     
-    [self.view exchangeSubviewAtIndex:7 withSubviewAtIndex:9];
+    [self.view exchangeSubviewAtIndex:7 withSubviewAtIndex:8];
     int tag = _combox.tag;
     switch (tag) {
         case 0:
@@ -382,7 +382,7 @@
     Total = 0;
     [infoData removeAllObjects];
     [oneSearchBar resignFirstResponder];
-
+     SearchString = oneSearchBar.text;
     [self searchClick];
 }
 
@@ -396,7 +396,9 @@
     [typeBox closeOtherCombox];
     
     NSString *server = SERVER_STRING;
-    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", SearchString,@"productname",selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
+       NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", SearchString,@"productname",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",nil];
+//        NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", SearchString,@"productname",selectTypeID,@"productCategoryid",selectCityID,@"cityId",[WeGameHelper getString:@"UserID"],@"userid", nil];
+//    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", SearchString,@"productname",selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
     //    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
     
         NSLog(@"请求数据：%@",parameters);
@@ -469,19 +471,19 @@
 #pragma mark - XCMultiTableViewDelegate
 -(void)sortByName:(int)sort
 {
-    page=1;
-    Total = 0;
-    [infoData removeAllObjects];
-    SortByName = sort;
-    [self searchClick ];
+//    page=1;
+//    Total = 0;
+//    [infoData removeAllObjects];
+//    SortByName = sort;
+//    [self searchClick ];
 }
 -(void)sortByPrice:(int)sort
 {
-    page=1;
-    Total = 0;
-    [infoData removeAllObjects];
-    PriceIndex = sort;
-    [self searchClick ];
+//    page=1;
+//    Total = 0;
+//    [infoData removeAllObjects];
+//    PriceIndex = sort;
+//    [self searchClick ];
     
 }
 -(void)addToList:(int)rowID delete:(BOOL)del
@@ -549,9 +551,9 @@
 }
 -(void)addMore
 {
-    page++;
-    [self searchClick];
-    return;
+//    page++;
+//    [self searchClick];
+//    return;
 }
 
 -(void)backPress
@@ -585,7 +587,11 @@
     [searchBar resignFirstResponder];
     //    [infoData removeAllObjects];
     
-    [self startSearch];
+    page=1;
+    Total = 0;
+    
+    [self searchClick];
+
     
 }
 #pragma mark - 实现监听开始输入的方法

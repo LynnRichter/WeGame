@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WeGame/SearchResuleViewController.m"
-            timestampString = "448459089.484629"
+            timestampString = "448859140.239852"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "-searchClick"
             landmarkType = "5">
          </BreakpointContent>

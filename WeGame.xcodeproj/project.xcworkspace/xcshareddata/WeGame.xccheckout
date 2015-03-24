@@ -10,14 +10,14 @@
 	<string>WeGame</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>07FE5D1B8680944CCD3C460D3091B076D6CE318F</key>
+		<key>B5AFBC23303697D770DC4BB801E7DCB221B0982F</key>
 		<string>https://github.com/LynnRichter/WeGame.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>WeGame.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>07FE5D1B8680944CCD3C460D3091B076D6CE318F</key>
+		<key>B5AFBC23303697D770DC4BB801E7DCB221B0982F</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>07FE5D1B8680944CCD3C460D3091B076D6CE318F</string>
+	<string>B5AFBC23303697D770DC4BB801E7DCB221B0982F</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>07FE5D1B8680944CCD3C460D3091B076D6CE318F</string>
+			<string>B5AFBC23303697D770DC4BB801E7DCB221B0982F</string>
 			<key>IDESourceControlWCCName</key>
 			<string>WeGame</string>
 		</dict>
