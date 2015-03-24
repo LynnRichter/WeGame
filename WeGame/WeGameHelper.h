@@ -22,4 +22,5 @@
 + (NSString *)getString:(NSString *)key;
 + (BOOL)getLogin;
 + (void)setLogin:(BOOL)value;
++(int)intervalSinceNow: (NSDate *) theDate;
 @end

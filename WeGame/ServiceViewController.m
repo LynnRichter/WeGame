@@ -153,7 +153,6 @@
 }
 -(void)callNumber:(id)sender
 {
-    UIButton *btn = (UIButton *)sender;
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",@"4001146668"]]];//打电话
 }
 @end

@@ -139,5 +139,26 @@
     [manager setBool:value forKey:@"login"];
     [manager synchronize];
 }
++(int)intervalSinceNow: (NSDate *) theDate
+{
+    
+   
+    
+    NSTimeInterval late=[theDate timeIntervalSince1970]*1;
+    
+    
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval now=[dat timeIntervalSince1970]*1;
+    NSString *timeString=@"";
+    
+    NSTimeInterval cha=now-late;
+    
+
+    timeString = [NSString stringWithFormat:@"%f", cha/86400];
+    timeString = [timeString substringToIndex:timeString.length-7];
+    return abs([timeString intValue]) ;
+
+}
+
 @end
 

@@ -34,6 +34,7 @@
     int PriceIndex;
     int Total;
     int page;
+    BOOL tips;
     
     NSMutableArray *headData;
     NSMutableArray * infoData ;
@@ -45,7 +46,6 @@
     XCMultiTableView *tableView;
     UIView *filterView;
     UIActivityIndicatorView *activity;
-    MBProgressHUD *hud;
 
     
 }

@@ -25,8 +25,10 @@
     SortByName = 1;
     SortByPrice = 1;
     PriceIndex = 0;
+    tips = NO;
     [self UIFactory];
     infoData = [[NSMutableArray alloc] initWithCapacity:0];
+    
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -119,12 +121,6 @@
     [headData addObject:@"报价日期"];
     [headData addObject:@"采购清单"];
 
-    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    // Configure for text only and offset down
-    hud.mode = MBProgressHUDModeText;
-    hud.margin = 10.f;
-    [hud setHidden:YES];
-    hud.removeFromSuperViewOnHide = YES;
 
     
     activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -132,9 +128,11 @@
     [activity setHidesWhenStopped:YES];
     [self.view addSubview:activity];
     [activity startAnimating];
-    [self getCategory];
+    Cities = [[NSMutableArray alloc] initWithCapacity:0];
+    Categories = [[NSMutableArray alloc] initWithCapacity:0];
+    [self getCity];
+   
 
-    
     
     
 
@@ -152,12 +150,11 @@
 
 -(void) getCategory
 {
-    Cities = [[NSMutableArray alloc] initWithCapacity:0];
-    Categories = [[NSMutableArray alloc] initWithCapacity:0];
+
     
     NSString *server = SERVER_STRING;
     
-    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",nil];
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",selectCityID,@"cityid",nil];
     
     __block NSDictionary *dict = [[NSDictionary alloc] init];
     
@@ -169,7 +166,7 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Categories = [dict objectForKey:@"data"];
-        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(10, 5, 72, 30)];
+        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 72, cityBox.frame.size.height)];
         [typeBox setBackgroundColor:[UIColor whiteColor]];
         [typeBox setArrowImgName:@"down_tri.png"];
         [typeBox setTitlesList:Categories];
@@ -180,18 +177,15 @@
         [typeBox setHasBoard:YES];
         [typeBox defaultSettings];
         [bgScrollView addSubview:typeBox];
-
-        
-        [self getCity];
-        
+         [self setDate];
+        [self searchClick];
 
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
-        [hud setHidden:NO];
+        
+        [self showMSG:@"更新数据失败，请检查网络连接"];
 
-        hud.labelText = @"更新数据失败，请检查网络连接";
-        [hud hide:YES afterDelay:2];
     }];
         
         
@@ -221,12 +215,12 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Cities = [dict objectForKey:@"data"];
-        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3
-                                                                , typeBox.frame.origin.y, 69, typeBox.frame.size.height)];
-        [cityBox setBackgroundColor: [typeBox backgroundColor]];
+        cityBox = [[LMComBoxView alloc] initWithFrame:CGRectMake(10, 5, 52, 30)];
+//        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3
+//                                                                , typeBox.frame.origin.y, 69, typeBox.frame.size.height)];
+        [cityBox setBackgroundColor: [UIColor whiteColor]];
         [cityBox setArrowImgName:@"down_tri.png"];
         [bgScrollView addSubview:cityBox];
-
         [cityBox setTitlesList:Cities];
         [cityBox setKey:@"shortName"];
         [cityBox setTag:1];
@@ -234,32 +228,12 @@
         [cityBox setDelegate:self];
         [cityBox setHasBoard:YES];
         [cityBox defaultSettings];
-        
-        
-        NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
-        [formater setDateFormat:@"yyyy-MM-dd"];
-        NSDate *curDate = [NSDate date];//获取当前日期
-        NSString * curTime = [formater stringFromDate:curDate];
-        selectDate = [NSString stringWithFormat:@"%ld", (long)[curDate timeIntervalSince1970]];
-        
-        timeBtn =[UIButton buttonWithType:UIButtonTypeCustom];
-        [timeBtn setFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, typeBox.frame.origin.y, 85, typeBox.frame.size.height)];
-        [timeBtn setTitle:curTime forState:UIControlStateNormal];
-        [timeBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-        [timeBtn setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
-        timeBtn.layer.borderColor = [RGBClor(238, 238, 238) CGColor];
-        timeBtn.layer.borderWidth = 0.5;
-        [timeBtn addTarget:self action:@selector(dateClick) forControlEvents:UIControlEventTouchUpInside];
-        
-        [bgScrollView addSubview:timeBtn];
-        [self searchClick];
-
+        [self getCategory];
             
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
-        [hud setHidden:NO];
-        hud.labelText = @"更新数据失败，请检查网络连接";
-        [hud hide:YES afterDelay:2];
+        [self showMSG:@"更新数据失败，请检查网络连接"];
+
 
         NSLog(@"请求失败:%@",error);
     }];
@@ -268,7 +242,63 @@
     
 
 }
+-(void)setDate
+{
+    NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
+    [formater setDateFormat:@"yyyy-MM-dd"];
+    NSDate *curDate = [NSDate date];//获取当前日期
+    NSString * curTime = [formater stringFromDate:curDate];
+    selectDate = [NSString stringWithFormat:@"%ld", (long)[curDate timeIntervalSince1970]];
+    
+    timeBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    [timeBtn setFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3, typeBox.frame.origin.y, 85, typeBox.frame.size.height)];
+    [timeBtn setTitle:curTime forState:UIControlStateNormal];
+    [timeBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+    [timeBtn setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
+    timeBtn.layer.borderColor = [RGBClor(238, 238, 238) CGColor];
+    timeBtn.layer.borderWidth = 0.5;
+    [timeBtn addTarget:self action:@selector(dateClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [bgScrollView addSubview:timeBtn];
+}
+-(void)updateCategory
+{
+    
+    NSString *server = SERVER_STRING;
+    
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",selectCityID,@"cityid",nil];
+    
+    __block NSDictionary *dict = [[NSDictionary alloc] init];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    // GET请求
+    [manager GET: [CATEGORY_INFO stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *html = operation.responseString;
+        NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
+        dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
+        Categories = [dict objectForKey:@"data"];
+        [typeBox removeFromSuperview];
+        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 72, cityBox.frame.size.height)];
+        [typeBox setBackgroundColor:[UIColor whiteColor]];
+        [typeBox setArrowImgName:@"down_tri.png"];
+        [typeBox setTitlesList:Categories];
+        [typeBox setKey:@"name"];
+        [typeBox setTag:0];
+        typeBox.supView = bgScrollView;
+        [typeBox setDelegate:self];
+        [typeBox setHasBoard:YES];
+        [typeBox defaultSettings];
+        [bgScrollView addSubview:typeBox];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [activity stopAnimating];
+        [self showMSG:@"更新数据失败，请检查网络连接"];
+    }];
 
+    
+
+}
 //设置时间
 -(void)dateClick
 {
@@ -278,9 +308,6 @@
     }
     else
     {
-        
-        
-        
         
         float datePHeight = 200.f;
         NSDate *curDate = [NSDate date];//获取当前日期
@@ -307,6 +334,14 @@
     
     
     NSDate *curdate= datePicker.date;
+    int x =  [WeGameHelper intervalSinceNow:curdate];
+    if (x >=90) {
+        tips =YES;
+    }
+    else
+    {
+        tips = NO;
+    }
     selectDate = [NSString stringWithFormat:@"%ld", (long)[curdate timeIntervalSince1970]];
     NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
     [formater setDateFormat:@"yyyy-MM-dd"];
@@ -357,7 +392,9 @@
         case 1:
             selectCityID = [[Cities objectAtIndex:index] objectForKey:@"id"];
             selectCity = [[Cities objectAtIndex:index] objectForKey:@"name"];
+            
             NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
+            [self updateCategory];
             break;
 
             
@@ -381,6 +418,27 @@
     [self.view bringSubviewToFront:activity];
     [cityBox closeOtherCombox];
     [typeBox closeOtherCombox];
+    
+    if (tips && ![WeGameHelper getLogin]){
+        
+        [activity stopAnimating];
+        [self showMSG:@"未登录只能查看三个月前的数据，请登录"];
+        
+        
+        
+        dispatch_async(dispatch_get_global_queue(0, 0), ^(void){
+            [NSThread sleepForTimeInterval:2];
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                LoginViewController *lvc = [[LoginViewController alloc] init];
+                [lvc setHomeMsg:NO];
+                [self.navigationController pushViewController:lvc animated:YES];
+            });
+            
+        });
+        NSLog(@"请先去注册去，少年");
+        
+        return;
+    }
     
     NSString *server = SERVER_STRING;
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
@@ -427,8 +485,7 @@
        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
-        hud.labelText = @"更新数据失败，请检查网络连接";
-        [hud hide:YES afterDelay:2];
+        [self showMSG:@"更新数据失败，请检查网络连接"];
 
         NSLog(@"请求失败:%@",error);
     }];
@@ -562,5 +619,17 @@
         [lvc setHomeMsg:NO];
         [self.navigationController pushViewController:lvc animated:YES];
     }
+}
+-(void)showMSG:(NSString *)msg
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    // Configure for text only and offset down
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText =msg;
+    hud.margin = 10.f;
+    hud.removeFromSuperViewOnHide = YES;
+    
+    [hud hide:YES afterDelay:2];
+    
 }
 @end

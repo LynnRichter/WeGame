@@ -16,7 +16,7 @@
 #define SERVER_STRING [WeGameHelper hmac_sha1:CLIENT_STRING]
 #define KEY     @"eAbeZPcv04"
 #define LoginURL        @"http://test.chinaap.com/mobile/user/loginUser"
-#define CATEGORY_INFO   @"http://test.chinaap.com/mobile/admin/productCategoryInfo"
+#define CATEGORY_INFO   @"http://test.chinaap.com/mobile/admin/getCityCategoryInfo"
 #define CITY_INFO       @"http://test.chinaap.com/mobile/admin/cityInfo"
 #define PRICE_INFO      @"http://test.chinaap.com/mobile/admin/priceInfo"
 #define USER_REGIST     @"http://test.chinaap.com/mobile/user/userRegister"
