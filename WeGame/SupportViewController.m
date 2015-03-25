@@ -136,10 +136,7 @@ AFHTTPRequestOperationManager *manager;
     [self.view addSubview:searchBtn];
     [searchBtn addTarget:self action:@selector(startClick) forControlEvents:UIControlEventTouchUpInside];
     
-    //顶部与内容呈现页面的间隔符
-//    UIView *hLine1 = [[UIView alloc] initWithFrame:CGRectMake(0, filterView.frame.origin.y+filterView.frame.size.height, screenWidth, 1)];
-//    [hLine1 setBackgroundColor:RGBClor(238, 238, 238)];
-//    [self.view addSubview:hLine1];
+
 
     
     
@@ -148,7 +145,7 @@ AFHTTPRequestOperationManager *manager;
     [activity setHidesWhenStopped:YES];
     [self.view addSubview:activity];
     [activity startAnimating];
-    [self getCategory];
+    [self getCity];
 
     
     
@@ -158,24 +155,24 @@ AFHTTPRequestOperationManager *manager;
 
 -(void) getCategory
 {
+    
+    
     NSString *server = SERVER_STRING;
     
-    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",nil];
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",selectCityID,@"cityid",nil];
     
-    __block NSDictionary * dict = [[NSDictionary alloc] init];
+    __block NSDictionary *dict = [[NSDictionary alloc] init];
     
- 
 
     // GET请求
     [manager GET: [CATEGORY_INFO stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //  请求成功时的操作
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-        Categories = [[NSMutableArray alloc] initWithArray:[dict objectForKey:@"data"] copyItems:YES] ;
-//        NSLog(@"类别：%@",Categories);
-        NSDictionary *firstObject = [[NSDictionary alloc] initWithObjectsAndKeys:@"",@"id",@"请选择经营品种",@"name", nil];
-        [Categories insertObject:firstObject atIndex:0];
+        Categories = [dict objectForKey:@"data"];
+        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 100, cityBox.frame.size.height)];
+        [typeBox setBackgroundColor:[UIColor whiteColor]];
+        [typeBox setArrowImgName:@"down_tri.png"];
         [typeBox setTitlesList:Categories];
         [typeBox setKey:@"name"];
         [typeBox setTag:0];
@@ -184,17 +181,19 @@ AFHTTPRequestOperationManager *manager;
         [typeBox setHasBoard:YES];
         [typeBox defaultSettings];
         [bgScrollView addSubview:typeBox];
-        [self getCity];
+        [self searchClick];
+        
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
+        
         [self showMSG:@"更新数据失败，请检查网络连接"];
-
-        NSLog(@"请求失败:%@",error);
+        
     }];
     
-        
-        
+    
+    
+    
     
 }
 
@@ -202,22 +201,27 @@ AFHTTPRequestOperationManager *manager;
 //获取所有城市
 -(void)getCity
 {
+    
     NSString *server = SERVER_STRING;
+    
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",nil];
-    __block NSDictionary * dict = [[NSDictionary alloc] init];
+    
+    __block NSDictionary *dict = [[NSDictionary alloc] init];
+
     // GET请求
     [manager GET: [CITY_INFO stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //  请求成功时的操作
         [activity stopAnimating];
+        
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Cities = [dict objectForKey:@"data"];
-//        NSLog(@"获取到的城市：%@",dict);
-        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3
-                                                                , typeBox.frame.origin.y, 69, typeBox.frame.size.height)];
-        [cityBox setBackgroundColor: [typeBox backgroundColor]];
+        cityBox = [[LMComBoxView alloc] initWithFrame:CGRectMake(10, 5, 100, 30)];
+        //        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3
+        //                                                                , typeBox.frame.origin.y, 69, typeBox.frame.size.height)];
+        [cityBox setBackgroundColor: [UIColor whiteColor]];
         [cityBox setArrowImgName:@"down_tri.png"];
+        [bgScrollView addSubview:cityBox];
         [cityBox setTitlesList:Cities];
         [cityBox setKey:@"shortName"];
         [cityBox setTag:1];
@@ -225,18 +229,54 @@ AFHTTPRequestOperationManager *manager;
         [cityBox setDelegate:self];
         [cityBox setHasBoard:YES];
         [cityBox defaultSettings];
-        [bgScrollView addSubview:cityBox];
-        [self searchClick];
+        [self getCategory];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
         [self showMSG:@"更新数据失败，请检查网络连接"];
-
+        
+        
         NSLog(@"请求失败:%@",error);
     }];
     
-        
+    
+    
+    
+}
 
+-(void)updateCategory
+{
+    
+    NSString *server = SERVER_STRING;
+    
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",selectCityID,@"cityid",nil];
+    
+    __block NSDictionary *dict = [[NSDictionary alloc] init];
+    // GET请求
+    [manager GET: [CATEGORY_INFO stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *html = operation.responseString;
+        NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
+        dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
+        Categories = [dict objectForKey:@"data"];
+        [typeBox removeFromSuperview];
+        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 72, cityBox.frame.size.height)];
+        [typeBox setBackgroundColor:[UIColor whiteColor]];
+        [typeBox setArrowImgName:@"down_tri.png"];
+        [typeBox setTitlesList:Categories];
+        [typeBox setKey:@"name"];
+        [typeBox setTag:0];
+        typeBox.supView = bgScrollView;
+        [typeBox setDelegate:self];
+        [typeBox setHasBoard:YES];
+        [typeBox defaultSettings];
+        [bgScrollView addSubview:typeBox];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [activity stopAnimating];
+        [self showMSG:@"更新数据失败，请检查网络连接"];
+    }];
+    
+    
     
 }
 //获取条件设置
@@ -277,6 +317,7 @@ AFHTTPRequestOperationManager *manager;
         case 1:
             selectCityID = [[Cities objectAtIndex:index] objectForKey:@"id"];
             selectCity = [[Cities objectAtIndex:index] objectForKey:@"shortName"];
+            [self updateCategory];
             NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
             break;
             
@@ -302,7 +343,7 @@ AFHTTPRequestOperationManager *manager;
     
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectCityID,@"cityId", selectTypeID,@"categoryId",nil];
     __block NSDictionary * dict = [[NSDictionary alloc] init];
-//    NSLog(@"供应商接口访问数据：%@",parameters);
+    NSLog(@"供应商接口访问数据：%@",parameters);
     [manager GET: [PROVIDER_LIST stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //  请求成功时的操作
         [activity stopAnimating];

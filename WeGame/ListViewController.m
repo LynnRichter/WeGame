@@ -267,7 +267,7 @@
         case 1:
             selectCityID = [[Cities objectAtIndex:index] objectForKey:@"id"];
             selectCity = [[Cities objectAtIndex:index] objectForKey:@"name"];
-            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
+//            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
             break;
             
             
@@ -288,7 +288,7 @@
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",@"-200",@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort", nil];
 
     
-    NSLog(@"采购清单请求参数：%@",parameters);
+//    NSLog(@"采购清单请求参数：%@",parameters);
     // GET请求
     __block NSDictionary *dict = [[NSDictionary alloc] init];
     
@@ -301,7 +301,7 @@
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-        NSLog(@"采购清单返回内容：%@",dict);
+//        NSLog(@"采购清单返回内容：%@",dict);
 
         if ([[dict objectForKey:@"total"] intValue] == 0) {
             [self showMSG:[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]];
@@ -376,7 +376,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"info = %@",dict);
+//            NSLog(@"info = %@",dict);
             [infoData removeObjectAtIndex:rowID];
             [tableView reloadData];
             

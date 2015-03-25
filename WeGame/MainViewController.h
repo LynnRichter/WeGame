@@ -25,6 +25,7 @@
     float screenHeight;
     UIButton *cityButton;
     UISearchBar *oneSearchBar;
+    NSString *HTML;
 
 }
 

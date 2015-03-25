@@ -26,6 +26,7 @@
 }
 -(void)UIFactory
 {
+    HTML = @"";
     [self.view setBackgroundColor:RGBClor(244, 244, 244)];
     screenWidth = [UIScreen mainScreen].bounds.size.width;
     screenHeight = [UIScreen mainScreen].bounds.size.height;
@@ -253,8 +254,10 @@
     
 
     
-    [self getIP];
-    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^(void){
+        [self getIP];
+        
+    });
 }
 
 -(IBAction)btnClick:(id)sender
@@ -352,6 +355,8 @@
     [mainViewController setSelectedIndex:tag];
     [self.navigationController pushViewController:mainViewController animated:YES];
     
+
+    
 }
 #pragma mark - 实现取消按钮的方法
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -359,7 +364,7 @@
 }
 #pragma mark - 实现键盘上Search按钮的方法
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    NSLog(@"您点击了键盘上的Search按钮");
+//    NSLog(@"您点击了键盘上的Search按钮");
     [searchBar resignFirstResponder];
     SearchResuleViewController *srvc = [[SearchResuleViewController alloc ] init];
     srvc.SearchString = searchBar.text;
@@ -376,12 +381,12 @@
 }
 #pragma mark - 实现监听开始输入的方法
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    NSLog(@"开始输入搜索内容");
+//    NSLog(@"开始输入搜索内容");
     return YES;
 }
 #pragma mark - 实现监听输入完毕的方法
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
-    NSLog(@"输入完毕");
+//    NSLog(@"输入完毕");
     return YES;
 }
 
@@ -393,14 +398,42 @@
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSString *html = operation.responseString;
-//        NSLog(@"获取到的IP为：%@",html);
-        [self getCity:html];
-        
+        NSLog(@"获取到的IP为：%@",html);
+        HTML = [html stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [cityButton setTitle:@"深圳" forState:UIControlStateNormal];
     }];
+    
+//    NSString *server = SERVER_STRING;
+//    NSString *URL = [NSString stringWithFormat:@"%@?server_str=%@&client_str=%@&ip=%@",GETCITY,server,CLIENT_STRING,HTML];
+//    NSLog(@"URL String = %@",URL);
+//    
+//    NSURLRequest *request2 = [NSURLRequest requestWithURL:[NSURL URLWithString:[URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+//
+//    AFHTTPRequestOperation *operation2 = [[AFHTTPRequestOperation alloc] initWithRequest:request2];
+//    [operation2 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSString *html = operation.responseString;
+//        NSLog(@"获取到的城市信息为：%@",html);
+//    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        [cityButton setTitle:@"深圳" forState:UIControlStateNormal];
+//    }];
+    
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+//    [queue addOperation:operation2];
     [queue addOperation:operation];
+   
+    while (true) {
+        NSLog(@"我只行了死循环");
+        if (![HTML isEqualToString:@""]) {
+            
+            [self getCity:HTML];
+            NSLog(@"我跳出了死循环");
+            break;
+        }
+        [NSThread sleepForTimeInterval:2];
+    }
+
+   
 }
 -(void)getCity:(NSString*)IP
 {
@@ -408,12 +441,19 @@
     
     AFHTTPRequestOperationManager *manager= [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
-    [manager GET: [[NSString stringWithFormat:@"%@%@",GETCITY,IP] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    NSString *server = SERVER_STRING;
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",IP,@"ip",nil];
+
+//    NSString *URL = [NSString stringWithFormat:@"%@?server_str=%@&client_str=%@&ip=%@",GETCITY,server,CLIENT_STRING,IP];
+//    NSLog(@"URL String = %@",URL);
+    NSLog(@"请求数据：%@",parameters);
+    [manager GET: [GETCITY stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //  请求成功时的操作
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-
+        
         [cityButton setTitle:[NSString stringWithFormat:@"%@",[[dict objectForKey:@"data"] objectForKey:@"city"]] forState:UIControlStateNormal];
         
         

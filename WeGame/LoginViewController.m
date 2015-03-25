@@ -181,7 +181,7 @@ UITextField *userName,*userPwd;
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-        NSLog(@"登录返回数据：%@",dict);
+//        NSLog(@"登录返回数据：%@",dict);
 //        NSLog(@"info==%@",[dict objectForKey:@"info"]);
         if ([[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]  isEqualToString:@""]) {
             [self showMSG:@"用户名或密码错误，请重新登录"];

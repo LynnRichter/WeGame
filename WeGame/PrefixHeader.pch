@@ -29,6 +29,6 @@
 #define DEL_LIST        @"http://test.chinaap.com/mobile/admin/cancelCollection"
 #define PID2PROVIDER    @"http://test.chinaap.com/mobile/provider/findProviderByProductId"
 #define GETIP           @"http://ip.3322.net"
-#define GETCITY         @"http://ip.taobao.com/service/getIpInfo.php?ip="
+#define GETCITY         @"http://test.chinaap.com/mobile/admin/ipInfo"
 #define CHECKMOBILE     @"http://test.chinaap.com/mobile/user/checkMobile"
 #endif

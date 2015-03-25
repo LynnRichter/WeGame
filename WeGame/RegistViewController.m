@@ -261,15 +261,15 @@
         
         __block NSDictionary * dict = [[NSDictionary alloc] init];
         
-        NSLog(@"检查手机请求数据；%@",parameters);
+//        NSLog(@"检查手机请求数据；%@",parameters);
         [manager GET: [CHECKMOBILE stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             //  请求成功时的操作
             
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"检查手机号返回数据 = %@",dict);
-            NSLog(@"info = %@",[dict objectForKey:@"info"]);
+//            NSLog(@"检查手机号返回数据 = %@",dict);
+//            NSLog(@"info = %@",[dict objectForKey:@"info"]);
             
             if([[dict objectForKey:@"data"] integerValue] == 1)
             {
@@ -326,7 +326,7 @@
 //    }
 
     typeID = [[Category objectAtIndex:index] objectForKey:@"ID"];
-    NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Category objectAtIndex:index] objectForKey:@"name"],typeID);
+//    NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Category objectAtIndex:index] objectForKey:@"name"],typeID);
 }
 
 //获取条件设置
@@ -352,15 +352,15 @@
     
         __block NSDictionary * dict = [[NSDictionary alloc] init];
 
-        NSLog(@"注册请求数据；%@",parameters);
+//        NSLog(@"注册请求数据；%@",parameters);
         [manager POST: [USER_REGIST stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             //  请求成功时的操作
 
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"注册接口返回数据 = %@",dict);
-            NSLog(@"info = %@",[dict objectForKey:@"info"]);
+//            NSLog(@"注册接口返回数据 = %@",dict);
+//            NSLog(@"info = %@",[dict objectForKey:@"info"]);
             
             if ([[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]  isEqualToString:@""]) {
                 [self showMSG:[NSString stringWithFormat:@"%@",[dict objectForKey:@"info"]]];

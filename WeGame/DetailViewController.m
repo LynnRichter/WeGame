@@ -306,7 +306,7 @@
     NSString *time = [NSString stringWithFormat:@"%.0f",[curDate timeIntervalSince1970]];
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"productId"]],@"productoid",[WeGameHelper getString:@"UserID"],@"userid",time,@"date",nil];
     __block NSDictionary * dict = [[NSDictionary alloc] init];
-    NSLog(@"各地批发价格请求参数：%@",parameters);
+//    NSLog(@"各地批发价格请求参数：%@",parameters);
     
     [manager GET: [PRICE_AREA stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //  请求成功时的操作
@@ -314,7 +314,7 @@
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-        NSLog(@"各地批发价格获取数据：%@",dict);
+//        NSLog(@"各地批发价格获取数据：%@",dict);
        NSMutableArray *cityData = [dict objectForKey:@"data"];
        int i = 0;
        for (NSDictionary * item in cityData) {

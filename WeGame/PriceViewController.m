@@ -385,7 +385,7 @@
     switch (tag) {
         case 0:
             selectTypeID = [[Categories objectAtIndex:index] objectForKey:@"id"];
-            NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Categories objectAtIndex:index] objectForKey:@"name"],[[Categories objectAtIndex:index] objectForKey:@"id"]);
+//            NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Categories objectAtIndex:index] objectForKey:@"name"],[[Categories objectAtIndex:index] objectForKey:@"id"]);
             
             
             break;
@@ -393,7 +393,7 @@
             selectCityID = [[Cities objectAtIndex:index] objectForKey:@"id"];
             selectCity = [[Cities objectAtIndex:index] objectForKey:@"name"];
             
-            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
+//            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
             [self updateCategory];
             break;
 
@@ -435,7 +435,7 @@
             });
             
         });
-        NSLog(@"请先去注册去，少年");
+//        NSLog(@"请先去注册去，少年");
         
         return;
     }
@@ -444,7 +444,7 @@
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
 //    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
 
-    NSLog(@"请求数据：%@",parameters);
+//    NSLog(@"请求数据：%@",parameters);
 
     // GET请求
     __block NSDictionary *dict = [[NSDictionary alloc] init];
@@ -551,7 +551,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"info = %@",dict);
+//            NSLog(@"info = %@",dict);
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -564,7 +564,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"info = %@",dict);
+//            NSLog(@"info = %@",dict);
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             

@@ -71,17 +71,7 @@
     [topBackView addSubview:backBtn];
     [backBtn addTarget:self action:@selector(backPress) forControlEvents:UIControlEventTouchUpInside];
     
-//    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [searchButton setImage:[UIImage imageNamed:@"head_search_ico.png" ] forState:UIControlStateNormal];
-//    [searchButton setFrame:CGRectMake(screenWidth-22-10, 33, 22, 22)];
-//    [searchButton addTarget:self action:@selector(searchPress) forControlEvents:UIControlEventTouchUpInside];
-//    [topBackView addSubview:searchButton];
-    
-    //顶部与底部的分隔符
-//    UIView *vLine3 = [[UIView alloc] initWithFrame:CGRectMake(0, topBackView.frame.origin.y+topBackView.frame.size.height, screenWidth,1)];
-//    [vLine3 setBackgroundColor:RGBClor(32, 37, 44)];
-//    [self.view addSubview:vLine3];
-    
+
     oneSearchBar = [[UISearchBar alloc] init];
     oneSearchBar.frame = CGRectMake(0, topBackView.frame.origin.y+topBackView.frame.size.height, screenWidth , 40); // 设置位置和大小
     oneSearchBar.keyboardType = UIKeyboardTypeEmailAddress; // 设置弹出键盘的类型
@@ -117,7 +107,7 @@
     
     //查询按钮
     UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [searchBtn setTitle:@"开始搜索" forState:UIControlStateNormal];
+    [searchBtn setTitle:@"开始查询" forState:UIControlStateNormal];
     [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [searchBtn setBackgroundColor:RGBClor(255, 128, 0)];
     [searchBtn setFrame:CGRectMake(screenWidth-5-68, 5+oneSearchBar.frame.size.height+oneSearchBar.frame.origin.y
@@ -147,7 +137,7 @@
     [activity setHidesWhenStopped:YES];
     [self.view addSubview:activity];
     [activity startAnimating];
-    [self getCategory];
+    [self getCity];
     
     
     
@@ -167,12 +157,11 @@
 
 -(void) getCategory
 {
-    Cities = [[NSMutableArray alloc] initWithCapacity:0];
-    Categories = [[NSMutableArray alloc] initWithCapacity:0];
+    
     
     NSString *server = SERVER_STRING;
     
-    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",nil];
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",selectCityID,@"cityid",nil];
     
     __block NSDictionary *dict = [[NSDictionary alloc] init];
     
@@ -184,7 +173,7 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Categories = [dict objectForKey:@"data"];
-        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(10, 5, 72, 30)];
+        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 72, cityBox.frame.size.height)];
         [typeBox setBackgroundColor:[UIColor whiteColor]];
         [typeBox setArrowImgName:@"down_tri.png"];
         [typeBox setTitlesList:Categories];
@@ -195,16 +184,15 @@
         [typeBox setHasBoard:YES];
         [typeBox defaultSettings];
         [bgScrollView addSubview:typeBox];
-        
-        
-        [self getCity];
-        
+        [self setDate];
+        [self searchClick];
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
         
-        [self showMSG:@"更新数据失败，请检查网络连接"] ;
+        [self showMSG:@"更新数据失败，请检查网络连接"];
+        
     }];
     
     
@@ -234,12 +222,12 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Cities = [dict objectForKey:@"data"];
-        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3
-                                                                , typeBox.frame.origin.y, 69, typeBox.frame.size.height)];
-        [cityBox setBackgroundColor: [typeBox backgroundColor]];
+        cityBox = [[LMComBoxView alloc] initWithFrame:CGRectMake(10, 5, 52, 30)];
+        //        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3
+        //                                                                , typeBox.frame.origin.y, 69, typeBox.frame.size.height)];
+        [cityBox setBackgroundColor: [UIColor whiteColor]];
         [cityBox setArrowImgName:@"down_tri.png"];
         [bgScrollView addSubview:cityBox];
-        
         [cityBox setTitlesList:Cities];
         [cityBox setKey:@"shortName"];
         [cityBox setTag:1];
@@ -247,36 +235,73 @@
         [cityBox setDelegate:self];
         [cityBox setHasBoard:YES];
         [cityBox defaultSettings];
-        
-        
-        NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
-        [formater setDateFormat:@"yyyy-MM-dd"];
-        NSDate *curDate = [NSDate date];//获取当前日期
-        NSString * curTime = [formater stringFromDate:curDate];
-        selectDate = [NSString stringWithFormat:@"%ld", (long)[curDate timeIntervalSince1970]];
-        
-        timeBtn =[UIButton buttonWithType:UIButtonTypeCustom];
-        [timeBtn setFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, typeBox.frame.origin.y, 85, typeBox.frame.size.height)];
-        [timeBtn setTitle:curTime forState:UIControlStateNormal];
-        [timeBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-        [timeBtn setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
-        timeBtn.layer.borderColor = [RGBClor(238, 238, 238) CGColor];
-        timeBtn.layer.borderWidth = 0.5;
-        [timeBtn addTarget:self action:@selector(dateClick) forControlEvents:UIControlEventTouchUpInside];
-        
-        [bgScrollView addSubview:timeBtn];
-        if (SearchString == nil) {
-            return;
-        }
-        
-        [self searchClick];
-        
+        [self getCategory];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
-        [self showMSG:@"更新数据失败，请检查网络连接"] ;
+        [self showMSG:@"更新数据失败，请检查网络连接"];
+        
+        
+        NSLog(@"请求失败:%@",error);
     }];
     
+    
+    
+    
+}
+-(void)setDate
+{
+    NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
+    [formater setDateFormat:@"yyyy-MM-dd"];
+    NSDate *curDate = [NSDate date];//获取当前日期
+    NSString * curTime = [formater stringFromDate:curDate];
+    selectDate = [NSString stringWithFormat:@"%ld", (long)[curDate timeIntervalSince1970]];
+    
+    timeBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    [timeBtn setFrame:CGRectMake(typeBox.frame.origin.x+typeBox.frame.size.width+3, typeBox.frame.origin.y, 85, typeBox.frame.size.height)];
+    [timeBtn setTitle:curTime forState:UIControlStateNormal];
+    [timeBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+    [timeBtn setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
+    timeBtn.layer.borderColor = [RGBClor(238, 238, 238) CGColor];
+    timeBtn.layer.borderWidth = 0.5;
+    [timeBtn addTarget:self action:@selector(dateClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [bgScrollView addSubview:timeBtn];
+}
+-(void)updateCategory
+{
+    
+    NSString *server = SERVER_STRING;
+    
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",selectCityID,@"cityid",nil];
+    
+    __block NSDictionary *dict = [[NSDictionary alloc] init];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    // GET请求
+    [manager GET: [CATEGORY_INFO stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSString *html = operation.responseString;
+        NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
+        dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
+        Categories = [dict objectForKey:@"data"];
+        [typeBox removeFromSuperview];
+        typeBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 72, cityBox.frame.size.height)];
+        [typeBox setBackgroundColor:[UIColor whiteColor]];
+        [typeBox setArrowImgName:@"down_tri.png"];
+        [typeBox setTitlesList:Categories];
+        [typeBox setKey:@"name"];
+        [typeBox setTag:0];
+        typeBox.supView = bgScrollView;
+        [typeBox setDelegate:self];
+        [typeBox setHasBoard:YES];
+        [typeBox defaultSettings];
+        [bgScrollView addSubview:typeBox];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [activity stopAnimating];
+        [self showMSG:@"更新数据失败，请检查网络连接"];
+    }];
     
     
     
@@ -340,20 +365,20 @@
 }
 -(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
 {
-    int i=0;
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
-            NSLog(@"找到了%d",i);
-            //            break;
-        }
-        if ([view isKindOfClass:[XCMultiTableView class]]) {
-            NSLog(@"找到了XCMultiTableView %d",i);
-            //            break;
-        }
-        
-        
-        i++;
-    }
+//    int i=0;
+//    for (UIView *view in self.view.subviews) {
+//        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
+//            NSLog(@"找到了%d",i);
+//            //            break;
+//        }
+//        if ([view isKindOfClass:[XCMultiTableView class]]) {
+//            NSLog(@"找到了XCMultiTableView %d",i);
+//            //            break;
+//        }
+//        
+//        
+//        i++;
+//    }
     
     
     [self.view exchangeSubviewAtIndex:7 withSubviewAtIndex:8];
@@ -361,14 +386,16 @@
     switch (tag) {
         case 0:
             selectTypeID = [[Categories objectAtIndex:index] objectForKey:@"id"];
-            NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Categories objectAtIndex:index] objectForKey:@"name"],[[Categories objectAtIndex:index] objectForKey:@"id"]);
+//            NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Categories objectAtIndex:index] objectForKey:@"name"],[[Categories objectAtIndex:index] objectForKey:@"id"]);
             
             
             break;
         case 1:
             selectCityID = [[Cities objectAtIndex:index] objectForKey:@"id"];
             selectCity = [[Cities objectAtIndex:index] objectForKey:@"name"];
-            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
+            [self updateCategory];
+
+//            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
             break;
             
             
@@ -401,7 +428,7 @@
 //    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", SearchString,@"productname",selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
     //    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
     
-        NSLog(@"请求数据：%@",parameters);
+//        NSLog(@"请求数据：%@",parameters);
     
     // GET请求
     __block NSDictionary *dict = [[NSDictionary alloc] init];
@@ -416,7 +443,7 @@
         
         [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
         Total += [[dict objectForKey:@"total"] intValue];
-        NSLog(@"搜索数据内容%@",dict);
+//        NSLog(@"搜索数据内容%@",dict);
         
         //可左右滚动的表格
         [activity stopAnimating];
@@ -506,7 +533,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"info = %@",dict);
+//            NSLog(@"info = %@",dict);
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -519,7 +546,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"info = %@",dict);
+//            NSLog(@"info = %@",dict);
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -582,7 +609,7 @@
 }
 #pragma mark - 实现键盘上Search按钮的方法
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    NSLog(@"您点击了键盘上的Search按钮");
+//    NSLog(@"您点击了键盘上的Search按钮");
     SearchString = searchBar.text;
     [searchBar resignFirstResponder];
     //    [infoData removeAllObjects];
@@ -596,12 +623,12 @@
 }
 #pragma mark - 实现监听开始输入的方法
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    NSLog(@"开始输入搜索内容");
+//    NSLog(@"开始输入搜索内容");
     return YES;
 }
 #pragma mark - 实现监听输入完毕的方法
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
-    NSLog(@"输入完毕");
+//    NSLog(@"输入完毕");
     return YES;
 }
 -(void)showMSG:(NSString *)msg
