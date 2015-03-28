@@ -153,7 +153,7 @@
     
     
 //    NSString *descText = @"深圳市中央大厨房物流配送有限公司（简称“中央大厨房”，www.greenport.cn）是由深圳市农产品股份有限公司与新希望集团共同组建的创新型农产品物流服务公司，于2011年6月份正式注册成立，注册资本5000万元。深圳中央大厨房公司将依托股东农产品公司的批发市场网络优势、以新希望集团的泛食品行业产业优势为基础，以集约式中央厨房业务为切入点，上承农产品电子交易平台，下接流动售卖车零售网点 ";
-    NSString *descText = [[[[[[NSString stringWithFormat:@"%@",[item objectForKey:@"detailIntro"]] stringByReplacingOccurrencesOfString:@"<p>" withString:@""] stringByReplacingOccurrencesOfString:@"</p>" withString:@""] stringByReplacingOccurrencesOfString:@"&rdquo" withString:@""] stringByReplacingOccurrencesOfString:@"&ldquo;" withString:@""] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
+    NSString *descText = [[[[[[NSString stringWithFormat:@"%@",[item objectForKey:@"introduction"]] stringByReplacingOccurrencesOfString:@"<p>" withString:@""] stringByReplacingOccurrencesOfString:@"</p>" withString:@""] stringByReplacingOccurrencesOfString:@"&rdquo" withString:@""] stringByReplacingOccurrencesOfString:@"&ldquo;" withString:@""] stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@""];
 
     CGSize size = CGSizeMake(300, 2000);
     CGRect labRect = [descText boundingRectWithSize:size options:(NSStringDrawingUsesLineFragmentOrigin |NSStringDrawingUsesFontLeading)  attributes:[NSDictionary dictionaryWithObject:[UIFont fontWithName:@"Helvetica" size:14] forKey:NSFontAttributeName] context:nil];

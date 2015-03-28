@@ -609,14 +609,11 @@
 }
 #pragma mark - 实现键盘上Search按钮的方法
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-//    NSLog(@"您点击了键盘上的Search按钮");
-    SearchString = searchBar.text;
-    [searchBar resignFirstResponder];
-    //    [infoData removeAllObjects];
-    
     page=1;
     Total = 0;
-    
+    [infoData removeAllObjects];
+    [oneSearchBar resignFirstResponder];
+    SearchString = oneSearchBar.text;
     [self searchClick];
 
     

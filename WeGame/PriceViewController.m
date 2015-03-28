@@ -25,7 +25,7 @@
     SortByName = 1;
     SortByPrice = 1;
     PriceIndex = 0;
-    tips = NO;
+    distance = 0;
     [self UIFactory];
     infoData = [[NSMutableArray alloc] initWithCapacity:0];
     
@@ -334,14 +334,8 @@
     
     
     NSDate *curdate= datePicker.date;
-    int x =  [WeGameHelper intervalSinceNow:curdate];
-    if (x >=90) {
-        tips =YES;
-    }
-    else
-    {
-        tips = NO;
-    }
+    distance =  [WeGameHelper intervalSinceNow:curdate];
+
     selectDate = [NSString stringWithFormat:@"%ld", (long)[curdate timeIntervalSince1970]];
     NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
     [formater setDateFormat:@"yyyy-MM-dd"];
@@ -407,19 +401,7 @@
     page=1;
     Total = 0;
     [infoData removeAllObjects];
-    [self searchClick];
-}
-
--(void)searchClick
-{
-    [datePicker setHidden:YES];
-    [dateTool setHidden: YES];
-    [activity startAnimating];
-    [self.view bringSubviewToFront:activity];
-    [cityBox closeOtherCombox];
-    [typeBox closeOtherCombox];
-    
-    if (tips && ![WeGameHelper getLogin]){
+    if (distance<= 90 && ![WeGameHelper getLogin]){
         
         [activity stopAnimating];
         [self showMSG:@"未登录只能查看三个月前的数据，请登录"];
@@ -435,10 +417,22 @@
             });
             
         });
-//        NSLog(@"请先去注册去，少年");
+        //        NSLog(@"请先去注册去，少年");
         
         return;
     }
+    [self searchClick];
+}
+
+-(void)searchClick
+{
+    [datePicker setHidden:YES];
+    [dateTool setHidden: YES];
+    [activity startAnimating];
+    [self.view bringSubviewToFront:activity];
+    [cityBox closeOtherCombox];
+    [typeBox closeOtherCombox];
+    
     
     NSString *server = SERVER_STRING;
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];

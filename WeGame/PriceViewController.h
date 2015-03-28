@@ -34,8 +34,7 @@
     int PriceIndex;
     int Total;
     int page;
-    BOOL tips;
-    
+    int distance;
     NSMutableArray *headData;
     NSMutableArray * infoData ;
     

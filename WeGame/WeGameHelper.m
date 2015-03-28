@@ -156,7 +156,8 @@
 
     timeString = [NSString stringWithFormat:@"%f", cha/86400];
     timeString = [timeString substringToIndex:timeString.length-7];
-    return abs([timeString intValue]) ;
+    NSLog(@"日期差别:%@",timeString);
+    return [timeString intValue] ;
 
 }
 
