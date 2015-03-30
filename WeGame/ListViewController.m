@@ -72,24 +72,24 @@
     [filterView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:filterView];
     
-    bgScrollView = [[LMContainsLMComboxScrollView alloc]initWithFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*100)];
+    bgScrollView = [[LMContainsLMComboxScrollView alloc]initWithFrame:CGRectMake(0, filterView.frame.origin.y, screenWidth, filterView.frame.size.height*100)];
     bgScrollView.backgroundColor = [UIColor clearColor];
     bgScrollView.showsVerticalScrollIndicator = NO;
     bgScrollView.showsHorizontalScrollIndicator = NO;
     bgScrollView.tag = 8975;
     [self.view addSubview:bgScrollView];
     
-    //查询按钮
-    UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [searchBtn setTitle:@"开始搜索" forState:UIControlStateNormal];
-    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [searchBtn setBackgroundColor:RGBClor(255, 128, 0)];
-    [searchBtn setFrame:CGRectMake(screenWidth-5-68, 5+vLine3.frame.size.height+vLine3.frame.origin.y
-                                   , 68, 30)];
-    searchBtn.layer.cornerRadius = 8;
-    [searchBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-    [self.view addSubview:searchBtn];
-    [searchBtn addTarget:self action:@selector(startLoadData) forControlEvents:UIControlEventTouchUpInside];
+//    //查询按钮
+//    UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [searchBtn setTitle:@"开始搜索" forState:UIControlStateNormal];
+//    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [searchBtn setBackgroundColor:RGBClor(255, 128, 0)];
+//    [searchBtn setFrame:CGRectMake(screenWidth-5-68, 5+vLine3.frame.size.height+vLine3.frame.origin.y
+//                                   , 68, 30)];
+//    searchBtn.layer.cornerRadius = 8;
+//    [searchBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+//    [self.view addSubview:searchBtn];
+//    [searchBtn addTarget:self action:@selector(startLoadData) forControlEvents:UIControlEventTouchUpInside];
     
     
     trendY = vLine3.frame.origin.y+vLine3.frame.size.height;
@@ -143,7 +143,7 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Cities = [dict objectForKey:@"data"];
-        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(10, 5, 260-125, 30)];
+        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(10, 5, screenWidth/2-15, 30)];
         [cityBox setBackgroundColor: [UIColor whiteColor]];
         [cityBox setArrowImgName:@"down_tri.png"];
         [bgScrollView addSubview:cityBox];
@@ -164,7 +164,7 @@
         selectDate = [NSString stringWithFormat:@"%ld", (long)[curDate timeIntervalSince1970]];
         
         timeBtn =[UIButton buttonWithType:UIButtonTypeCustom];
-        [timeBtn setFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 85, cityBox.frame.size.height)];
+        [timeBtn setFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, screenWidth/2-15, cityBox.frame.size.height)];
         [timeBtn setTitle:curTime forState:UIControlStateNormal];
         [timeBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
         [timeBtn setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
