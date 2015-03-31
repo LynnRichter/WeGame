@@ -72,24 +72,24 @@
     [filterView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:filterView];
     
-    bgScrollView = [[LMContainsLMComboxScrollView alloc]initWithFrame:CGRectMake(0, filterView.frame.origin.y, screenWidth, filterView.frame.size.height*100)];
+    bgScrollView = [[LMContainsLMComboxScrollView alloc]initWithFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*100)];
     bgScrollView.backgroundColor = [UIColor clearColor];
     bgScrollView.showsVerticalScrollIndicator = NO;
     bgScrollView.showsHorizontalScrollIndicator = NO;
     bgScrollView.tag = 8975;
     [self.view addSubview:bgScrollView];
     
-//    //查询按钮
-//    UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [searchBtn setTitle:@"开始搜索" forState:UIControlStateNormal];
-//    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [searchBtn setBackgroundColor:RGBClor(255, 128, 0)];
-//    [searchBtn setFrame:CGRectMake(screenWidth-5-68, 5+vLine3.frame.size.height+vLine3.frame.origin.y
-//                                   , 68, 30)];
-//    searchBtn.layer.cornerRadius = 8;
-//    [searchBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
-//    [self.view addSubview:searchBtn];
-//    [searchBtn addTarget:self action:@selector(startLoadData) forControlEvents:UIControlEventTouchUpInside];
+    //查询按钮
+    UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [searchBtn setTitle:@"开始搜索" forState:UIControlStateNormal];
+    [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [searchBtn setBackgroundColor:RGBClor(255, 128, 0)];
+    [searchBtn setFrame:CGRectMake(screenWidth-5-68, 5+vLine3.frame.size.height+vLine3.frame.origin.y
+                                   , 68, 30)];
+    searchBtn.layer.cornerRadius = 8;
+    [searchBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+    [self.view addSubview:searchBtn];
+    [searchBtn addTarget:self action:@selector(startLoadData) forControlEvents:UIControlEventTouchUpInside];
     
     
     trendY = vLine3.frame.origin.y+vLine3.frame.size.height;
@@ -143,7 +143,7 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         Cities = [dict objectForKey:@"data"];
-        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(10, 5, screenWidth/2-15, 30)];
+        cityBox = [[LMComBoxView alloc]initWithFrame:CGRectMake(10, 5,52, 30)];
         [cityBox setBackgroundColor: [UIColor whiteColor]];
         [cityBox setArrowImgName:@"down_tri.png"];
         [bgScrollView addSubview:cityBox];
@@ -157,6 +157,16 @@
         [cityBox defaultSettings];
         
         
+        UIButton *typeButton =[UIButton buttonWithType:UIButtonTypeCustom];
+        [typeButton setFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, 85, cityBox.frame.size.height)];
+        [typeButton setTitle:@"采购清单" forState:UIControlStateNormal];
+        [typeButton.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+        [typeButton setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
+        typeButton.layer.borderColor = [RGBClor(238, 238, 238) CGColor];
+        typeButton.layer.borderWidth = 0.5;
+        [bgScrollView addSubview:typeButton];
+        
+        
         NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
         [formater setDateFormat:@"yyyy-MM-dd"];
         NSDate *curDate = [NSDate date];//获取当前日期
@@ -164,7 +174,7 @@
         selectDate = [NSString stringWithFormat:@"%ld", (long)[curDate timeIntervalSince1970]];
         
         timeBtn =[UIButton buttonWithType:UIButtonTypeCustom];
-        [timeBtn setFrame:CGRectMake(cityBox.frame.origin.x+cityBox.frame.size.width+3, cityBox.frame.origin.y, screenWidth/2-15, cityBox.frame.size.height)];
+        [timeBtn setFrame:CGRectMake(typeButton.frame.origin.x+typeButton.frame.size.width+3, typeButton.frame.origin.y, 85, typeButton.frame.size.height)];
         [timeBtn setTitle:curTime forState:UIControlStateNormal];
         [timeBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
         [timeBtn setTitleColor:RGBClor(74, 74, 74) forState:UIControlStateNormal];
@@ -178,7 +188,7 @@
         }
         else
         {
-            //            弹出提示框，告知用户，去登录
+            //弹出提示框，告知用户，去登录
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"您尚未登录，暂时无法使用" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去登录", nil];
             [alert show];
             
@@ -407,6 +417,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {

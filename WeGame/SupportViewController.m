@@ -491,12 +491,12 @@ AFHTTPRequestOperationManager *manager;
     }
     
     NSDictionary *item = [infoData objectAtIndex:indexPath.row];
-//    NSLog(@"item = %@",item);
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 80, 80)];
     [cell.contentView addSubview:imageView];
     [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.chinaap.com/data/provider/%@",[item objectForKey:@"imageurl"]]] placeholderImage:[UIImage imageNamed:@"demo.png"]];
+    
 //    [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[item objectForKey:@"imageurl"]]] placeholderImage:[UIImage imageNamed:@"demo.png"]];
     
     UILabel *nameLabel = [[UILabel alloc ] initWithFrame:CGRectMake(imageView.frame.origin.x+imageView.frame.size.width+3, 5, screenWidth-imageView.frame.size.width-20, 18)];
