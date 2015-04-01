@@ -294,6 +294,8 @@
     [self.view bringSubviewToFront:activity];
     [activity startAnimating];
     [cityBox closeOtherCombox];
+    [infoData removeAllObjects];
+
     NSString *server = SERVER_STRING;
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",@"-200",@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort", nil];
 

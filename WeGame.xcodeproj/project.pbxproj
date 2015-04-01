@@ -828,7 +828,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "iPhone Developer: haywood fu (74N2V268JF)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shenzhen China Agricultural Products Data Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/WeGame",
@@ -838,7 +838,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "cd9812f3-3f9c-4e83-b990-f98edd57c0ce";
+				PROVISIONING_PROFILE = "5707bf4c-fb87-4555-95f1-707e63688707";
 			};
 			name = Debug;
 		};
@@ -848,7 +848,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "iPhone Developer: haywood fu (74N2V268JF)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shenzhen China Agricultural Products Data Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/WeGame",
@@ -858,7 +858,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "cd9812f3-3f9c-4e83-b990-f98edd57c0ce";
+				PROVISIONING_PROFILE = "5707bf4c-fb87-4555-95f1-707e63688707";
 			};
 			name = Release;
 		};

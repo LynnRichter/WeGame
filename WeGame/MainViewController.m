@@ -26,6 +26,10 @@
 }
 -(void)UIFactory
 {
+//    if (![WeGameHelper getLogin]) {
+//        [WeGameHelper saveString:@"" key:@"UserID"];
+//    }
+    
     HTML = @"";
     [self.view setBackgroundColor:RGBClor(244, 244, 244)];
     screenWidth = [UIScreen mainScreen].bounds.size.width;
