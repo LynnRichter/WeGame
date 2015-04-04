@@ -84,7 +84,7 @@
     [filterView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:filterView];
     
-    bgScrollView = [[LMContainsLMComboxScrollView alloc]initWithFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*100)];
+    bgScrollView = [[LMContainsLMComboxScrollView alloc]initWithFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*10)];
     bgScrollView.backgroundColor = [UIColor clearColor];
     bgScrollView.showsVerticalScrollIndicator = NO;
     bgScrollView.showsHorizontalScrollIndicator = NO;
@@ -120,6 +120,8 @@
     [headData addObject:@"价格来源"];
     [headData addObject:@"报价日期"];
     [headData addObject:@"采购清单"];
+    
+    
 
 
     
@@ -351,17 +353,21 @@
 }
 //获取条件设置
 #pragma mark -LMComBoxViewDelegate
+-(void)resetScroll:(int)rows
+{
+    [bgScrollView setFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*rows)] ;
+}
 -(void)startChose
 {
+    [self resetScroll:5];
     [self.view bringSubviewToFront:bgScrollView];
-    
 }
 -(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
 {
 //    int i=0;
 //    for (UIView *view in self.view.subviews) {
 //        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
-//            NSLog(@"找到了%d",i);
+//            NSLog(@"找到了LMContainsLMComboxScrollView %d",i);
 ////            break;
 //        }
 //        if ([view isKindOfClass:[XCMultiTableView class]]) {
@@ -374,12 +380,11 @@
 //    }
 
  
-    [self.view exchangeSubviewAtIndex:7 withSubviewAtIndex:9];
     int tag = _combox.tag;
     switch (tag) {
         case 0:
             selectTypeID = [[Categories objectAtIndex:index] objectForKey:@"id"];
-//            NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Categories objectAtIndex:index] objectForKey:@"name"],[[Categories objectAtIndex:index] objectForKey:@"id"]);
+            NSLog(@"你选择的种类是：%@, and ID IS : %@",[[Categories objectAtIndex:index] objectForKey:@"name"],[[Categories objectAtIndex:index] objectForKey:@"id"]);
             
             
             break;
@@ -387,7 +392,7 @@
             selectCityID = [[Cities objectAtIndex:index] objectForKey:@"id"];
             selectCity = [[Cities objectAtIndex:index] objectForKey:@"name"];
             
-//            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
+            NSLog(@"你选择的城市是：%@, and ID IS : %@",[[Cities objectAtIndex:index] objectForKey:@"name"],[[Cities objectAtIndex:index] objectForKey:@"id"]);
             [self updateCategory];
             break;
 
@@ -395,6 +400,8 @@
         default:
             break;
     }
+    [self resetScroll:1];
+
 }
 -(void)startSearch
 {
@@ -432,13 +439,14 @@
     [self.view bringSubviewToFront:activity];
     [cityBox closeOtherCombox];
     [typeBox closeOtherCombox];
-    
+    [self resetScroll:1];
+
     
     NSString *server = SERVER_STRING;
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
 //    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
 
-    NSLog(@"请求数据：%@",parameters);
+//    NSLog(@"请求数据：%@",parameters);
 
     // GET请求
     __block NSDictionary *dict = [[NSDictionary alloc] init];
@@ -453,8 +461,12 @@
 
 //        NSMutableArray *temp = ;
         [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
+        if([infoData count] == 0)
+        {
+            [self showMSG:@"当前没有数据，请选择其他查询条件"];
+        }
         Total += [[dict objectForKey:@"total"] intValue];
-        NSLog(@"查价格数据内容%@",dict);
+//        NSLog(@"查价格数据内容%@",dict);
 
        //可左右滚动的表格
        [activity stopAnimating];

@@ -257,15 +257,20 @@
 }
 //获取条件设置
 #pragma mark -LMComBoxViewDelegate
+-(void)resetScroll:(int)rows
+{
+    [bgScrollView setFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*rows)] ;
+}
 -(void)startChose
 {
     [self.view bringSubviewToFront:bgScrollView];
+    [self resetScroll:5];
     
 }
 -(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
 {
     
-    [self.view exchangeSubviewAtIndex:8 withSubviewAtIndex:9];
+//    [self.view exchangeSubviewAtIndex:8 withSubviewAtIndex:9];
     int tag = _combox.tag;
     switch (tag) {
         case 0:
@@ -284,6 +289,8 @@
         default:
             break;
     }
+    [self resetScroll:1];
+
 }
 
 -(void)startLoadData
@@ -295,6 +302,8 @@
     [activity startAnimating];
     [cityBox closeOtherCombox];
     [infoData removeAllObjects];
+    [self resetScroll:1];
+
 
     NSString *server = SERVER_STRING;
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",@"-200",@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort", nil];
