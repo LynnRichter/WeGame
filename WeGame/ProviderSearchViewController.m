@@ -115,7 +115,7 @@
     [activity startAnimating];
     
     NSString *server = SERVER_STRING;
-    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",SearchString,@"productname", nil];
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",SearchString,@"providerName",nil];
     @try {
         // GET请求
         __block NSDictionary *dict = [[NSDictionary alloc] init];
@@ -129,6 +129,11 @@
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
             infoData = [dict objectForKey:@"data"];
+            
+            if([infoData count] == 0)
+            {
+                [self showMSG:@"当前没有数据，请选择其他查询条件"];
+            }
 //            NSLog(@"total = %@",[dict objectForKey:@"total"]);
             //可左右滚动的表格
             if (DataTableView == nil) {

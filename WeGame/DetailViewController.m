@@ -31,6 +31,8 @@
 }
 -(void)UIFactory
 {
+//    NSLog(@"%@",ProductInfo);
+    
     screenWidth = [UIScreen mainScreen].bounds.size.width;
     screenHeight = [UIScreen mainScreen].bounds.size.height;
     cellHeight = 32;
@@ -206,7 +208,14 @@
     UILabel *priceIndex = [[UILabel alloc] initWithFrame:CGRectMake(priceIndexLb.frame.size.width+priceIndexLb.frame.origin.x+5, 5, screenWidth-priceIndexLb.frame.size.width+priceIndexLb.frame.origin.x-10, cellHeight-2*5)];
     [priceIndex setFont:contentFont];
     [priceIndex setTextColor:[UIColor redColor]];
-    [priceIndex setText:[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]]];
+//    [priceIndex setText:[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]]];
+    if([NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]] == nil ||[[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]] isEqualToString:@"<null>"] )
+    {
+        [priceIndex setText:@"0"];
+    }else
+    {
+        [priceIndex setText:[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]]];
+    }
     [priceIndexView addSubview:priceIndex];
 //    价格来源
     UIView *marketShortView = [[UIView alloc] initWithFrame:CGRectMake(0, priceIndexView.frame.origin.y+priceIndexView.frame.size.height, screenWidth, cellHeight)];
@@ -306,7 +315,7 @@
     NSString *time = [NSString stringWithFormat:@"%.0f",[curDate timeIntervalSince1970]];
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"productId"]],@"productoid",[WeGameHelper getString:@"UserID"],@"userid",time,@"date",nil];
     __block NSDictionary * dict = [[NSDictionary alloc] init];
-    NSLog(@"各地批发价格请求参数：%@",parameters);
+//    NSLog(@"各地批发价格请求参数：%@",parameters);
     
     [manager GET: [PRICE_AREA stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //  请求成功时的操作
@@ -314,7 +323,7 @@
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-        NSLog(@"各地批发价格获取数据：%@",dict);
+//        NSLog(@"各地批发价格获取数据：%@",dict);
        NSMutableArray *cityData = [dict objectForKey:@"data"];
        int i = 0;
        for (NSDictionary * item in cityData) {
@@ -559,9 +568,8 @@
         if ([[dict objectForKey:@"total"] intValue] != 0) {
             
         NSMutableArray *supportData = [dict objectForKey:@"data"];
-//        NSLog(@"本产品对应供应商：%@",supportData);
+        NSLog(@"本产品对应供应商：%@",supportData);
         int i = 0;
-//        for (i = 0 ; i<5 ; i++) {
         for (NSDictionary *item in supportData) {
             
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, trendY+i*140, screenHeight, 140)];
@@ -634,7 +642,14 @@
         
         trendY += 140*[supportData count];
         }
-//        trendY += 140*5;
+        else
+        {
+            UILabel *emptyLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, trendY+10, screenWidth, 40)];
+            [emptyLabel setText:@"暂无供应商推荐"];
+            [emptyLabel setFont:[UIFont fontWithName:@"Helvetica" size:13]];
+            [parentView addSubview:emptyLabel];
+            trendY +=50;
+        }
 
         [parentView setContentSize:CGSizeMake(screenWidth, trendY+10)];
         

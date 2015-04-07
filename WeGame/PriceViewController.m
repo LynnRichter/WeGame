@@ -364,20 +364,6 @@
 }
 -(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
 {
-//    int i=0;
-//    for (UIView *view in self.view.subviews) {
-//        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
-//            NSLog(@"找到了LMContainsLMComboxScrollView %d",i);
-////            break;
-//        }
-//        if ([view isKindOfClass:[XCMultiTableView class]]) {
-//            NSLog(@"找到了XCMultiTableView %d",i);
-////            break;
-//        }
-//
-//        
-//        i++;
-//    }
 
  
     int tag = _combox.tag;
@@ -459,7 +445,6 @@
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
 
-//        NSMutableArray *temp = ;
         [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
         if([infoData count] == 0)
         {

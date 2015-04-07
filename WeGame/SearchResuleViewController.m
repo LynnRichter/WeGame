@@ -351,6 +351,10 @@
     [timeBtn setTitle:curTime forState:UIControlStateNormal];
     
 }
+-(void)resetScroll:(int)rows
+{
+    [bgScrollView setFrame:CGRectMake(0, filterView.frame.origin.y, 260, filterView.frame.size.height*rows)] ;
+}
 -(void)finishDate
 {
     [datePicker setHidden:YES];
@@ -360,26 +364,12 @@
 #pragma mark -LMComBoxViewDelegate
 -(void)startChose
 {
+    [self resetScroll:5];
     [self.view bringSubviewToFront:bgScrollView];
-    
 }
 -(void)selectAtIndex:(int)index inCombox:(LMComBoxView *)_combox
 {
-//    int i=0;
-//    for (UIView *view in self.view.subviews) {
-//        if ([view isKindOfClass:[LMContainsLMComboxScrollView class]]) {
-//            NSLog(@"找到了%d",i);
-//            //            break;
-//        }
-//        if ([view isKindOfClass:[XCMultiTableView class]]) {
-//            NSLog(@"找到了XCMultiTableView %d",i);
-//            //            break;
-//        }
-//        
-//        
-//        i++;
-//    }
-    
+
     
     [self.view exchangeSubviewAtIndex:7 withSubviewAtIndex:8];
     int tag = _combox.tag;
@@ -402,6 +392,7 @@
         default:
             break;
     }
+        [self resetScroll:1];
 }
 -(void)startSearch
 {
@@ -421,6 +412,8 @@
     [self.view bringSubviewToFront:activity];
     [cityBox closeOtherCombox];
     [typeBox closeOtherCombox];
+    [self resetScroll:1];
+
     
     NSString *server = SERVER_STRING;
        NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", SearchString,@"productname",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",nil];
@@ -442,6 +435,10 @@
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
         
         [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
+        if([infoData count] == 0)
+        {
+            [self showMSG:@"当前没有数据，请选择其他查询条件"];
+        }
         Total += [[dict objectForKey:@"total"] intValue];
 //        NSLog(@"搜索数据内容%@",dict);
         

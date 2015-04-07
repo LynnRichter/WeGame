@@ -578,6 +578,7 @@
 				TargetAttributes = {
 					1815C70C1A3FE2090013F8DC = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = P2Z64RFS2V;
 					};
 					1815C7251A3FE20A0013F8DC = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -829,6 +830,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Shenzhen China Agricultural Products Data Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shenzhen China Agricultural Products Data Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/WeGame",
@@ -849,6 +851,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Shenzhen China Agricultural Products Data Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shenzhen China Agricultural Products Data Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/WeGame",
