@@ -603,16 +603,32 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
     //采购清单
     
     UIButton *btnInsert = [[UIButton alloc] initWithFrame:CGRectMake(releaseDateLabel.frame.origin.x+releaseDateLabel.frame.size.width+10, 2, 80,topHeaderHeight-4)];
-    if ([[inList objectAtIndex:indexPath.row] integerValue] == 0) {
-        [btnInsert setTitle:@"加入清单" forState:UIControlStateNormal];
-        [btnInsert setBackgroundColor:RGBClor(255, 102, 0)];
-
-    }
-    else
+    if(self.isList)
     {
-        [btnInsert setBackgroundColor:RGBClor(239,239,239)];
-        [btnInsert setTitle:@"移除清单" forState:UIControlStateNormal];
-        [btnInsert setTitleColor:RGBClor(95, 95, 95) forState:UIControlStateNormal];
+        if ([[item objectForKey:@"isInUserPurchaseList"] integerValue] == 0) {
+            [btnInsert setTitle:@"加入清单" forState:UIControlStateNormal];
+            [btnInsert setBackgroundColor:RGBClor(255, 102, 0)];
+            
+        }
+        else
+        {
+            [btnInsert setBackgroundColor:RGBClor(239,239,239)];
+            [btnInsert setTitle:@"移除清单" forState:UIControlStateNormal];
+            [btnInsert setTitleColor:RGBClor(95, 95, 95) forState:UIControlStateNormal];
+        }
+    }else
+    {
+        if ([[inList objectAtIndex:indexPath.row] integerValue] == 0) {
+            [btnInsert setTitle:@"加入清单" forState:UIControlStateNormal];
+            [btnInsert setBackgroundColor:RGBClor(255, 102, 0)];
+
+        }
+        else
+        {
+            [btnInsert setBackgroundColor:RGBClor(239,239,239)];
+            [btnInsert setTitle:@"移除清单" forState:UIControlStateNormal];
+            [btnInsert setTitleColor:RGBClor(95, 95, 95) forState:UIControlStateNormal];
+        }
     }
     [btnInsert.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     btnInsert.layer.cornerRadius = 6;
