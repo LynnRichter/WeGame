@@ -30,8 +30,8 @@
     int SortByName;
     int SortByPrice;
     int PriceIndex;
-
-    
+    int Total;
+    int page;
     NSMutableArray *headData;
     NSMutableArray * infoData ;
     

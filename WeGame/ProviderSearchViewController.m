@@ -140,6 +140,7 @@
                 DataTableView = [[UITableView alloc] initWithFrame:CGRectMake(5,trendY+10,screenWidth-10,screenHeight-10-trendY)];
                 DataTableView.dataSource = self;
                 DataTableView.delegate =self;
+                [DataTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
                 [self.view addSubview:DataTableView];
             }
             else

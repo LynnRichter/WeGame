@@ -41,14 +41,14 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
     UIButton *vertexView;
     UIImageView *arrow;
     
-    NSMutableDictionary *sectionFoldedStatus;
     NSArray *columnPointCollection;
     
     NSMutableArray *contentDataArray;
     
-    NSMutableDictionary *columnTapViewDict;
+
     
-    NSMutableDictionary *columnSortedTapFlags;
+    NSMutableArray *inList;
+    
 
     BOOL responseNumberofContentColumns;
     float ex_x ;
@@ -74,6 +74,7 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
         self.contentMode = UIViewContentModeRedraw;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        inList = [[NSMutableArray alloc] init];
         
         cellWidth = XCMultiTableView_DefaultCellWidth;
         cellHeight = XCMultiTableView_DefaultCellHeight;
@@ -304,8 +305,6 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
 
 - (void)reset {
     
-    columnTapViewDict = [NSMutableDictionary dictionary];
-    columnSortedTapFlags = [NSMutableDictionary dictionary];
     
     [self accessDataSourceData];
     
@@ -381,12 +380,8 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
         }
        
         
-        NSString *columnStr = [NSString stringWithFormat:@"-1_%d", i];
-        [columnTapViewDict setObject:view forKey:columnStr];
+
         
-        if ([columnSortedTapFlags objectForKey:columnStr] == nil) {
-            [columnSortedTapFlags setObject:[NSNumber numberWithInt:TableColumnSortTypeNone] forKey:columnStr];
-        }
         
         [topHeaderScrollView addSubview:view];
     }
@@ -608,7 +603,7 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
     //采购清单
     
     UIButton *btnInsert = [[UIButton alloc] initWithFrame:CGRectMake(releaseDateLabel.frame.origin.x+releaseDateLabel.frame.size.width+10, 2, 80,topHeaderHeight-4)];
-    if ([[item objectForKey:@"isInUserPurchaseList"] integerValue] == 0) {
+    if ([[inList objectAtIndex:indexPath.row] integerValue] == 0) {
         [btnInsert setTitle:@"加入清单" forState:UIControlStateNormal];
         [btnInsert setBackgroundColor:RGBClor(255, 102, 0)];
 
@@ -678,22 +673,18 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
 
 - (void)accessDataSourceData {
     contentDataArray = [[NSMutableArray alloc] initWithArray:[datasource arrayDataForLeftHeaderInTableView:self]];
-    
-
-}
-
-- (NSIndexPath *)accessUIViewVirtualTag:(UIView *)view {
-    for (NSString *key in [columnTapViewDict allKeys]) {
-        UIView *vi = [columnTapViewDict objectForKey:key];
-        if (vi == view) {
-            NSArray *sep = [key componentsSeparatedByString:@"_"];
-            NSUInteger section = [[sep objectAtIndex:0] integerValue];
-            NSUInteger row = [[sep objectAtIndex:1] integerValue];
-            return [NSIndexPath indexPathForRow:row inSection:section];
+    for (int i = 0; i<contentDataArray.count; i++) {
+        if ([[[contentDataArray objectAtIndex:i] objectForKey:@"isInUserPurchaseList"] integerValue] == 0) {
+            [inList addObject:@"0"];
+        }
+        else
+        {
+             [inList addObject:@"1"];
         }
     }
-    return nil;
 }
+
+
 
 -(void)btnClick:(id)sender
 {
@@ -717,6 +708,7 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
             [touchRow setBackgroundColor:RGBClor(255, 102, 0)];
             [touchRow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         }
+        [inList insertObject:@"0" atIndex:touchRow.tag];
 
         [delegate addToList:touchRow.tag delete:YES];
 
@@ -727,6 +719,8 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
         [touchRow setBackgroundColor:RGBClor(239,239,239)];
         [touchRow setTitle:@"移除清单" forState:UIControlStateNormal];
         [touchRow setTitleColor:RGBClor(95, 95, 95) forState:UIControlStateNormal];
+        [inList insertObject:@"1" atIndex:touchRow.tag];
+
         [delegate addToList:touchRow.tag delete:NO];
 
     }

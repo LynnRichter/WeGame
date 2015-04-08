@@ -555,7 +555,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-//            NSLog(@"info = %@",dict);
+            NSLog(@"info = %@",dict);
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -569,15 +569,7 @@
 
 -(void)rowSelected:(int)rowID
 {
-//    if ([infoData count] < Total) {
-//        if (rowID == [infoData count]) {
-//            page++;
-//            [self searchClick];
-//            return;
-//            
-//        }
-//    }
-//    
+
     NSDictionary *item = [infoData objectAtIndex:rowID];
     DetailViewController *detailVC = [[DetailViewController alloc] init];
     [detailVC setProductInfo:[item copy]];
@@ -587,9 +579,12 @@
 }
 -(void)addMore
 {
+    if ([infoData count] < Total) {
         page++;
         [self searchClick];
         return;
+    }
+    
 }
     
 -(void)backPress

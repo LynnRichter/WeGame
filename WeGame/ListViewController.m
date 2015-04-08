@@ -16,14 +16,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self UIFactory];
-    infoData = [[NSMutableArray alloc] initWithCapacity:0];
     selectCityID =  @"1";
     selectCity  = @"深圳";
-    
+    page = 1;
+    Total = 0;
     SortByName = 1;
     SortByPrice = 0;
-    // Do any additional setup after loading the view.
+    [self UIFactory];
+
+    infoData = [[NSMutableArray alloc] initWithCapacity:0];
+
 }
 -(void)UIFactory
 {
@@ -292,21 +294,26 @@
     [self resetScroll:1];
 
 }
+-(void)startSearch
+{
+    page=1;
+    Total = 0;
+    [infoData removeAllObjects];
+    [self startLoadData];
 
+}
 -(void)startLoadData
 {
-    [dateTool setHidden: YES];
-
     [datePicker setHidden:YES];
-    [self.view bringSubviewToFront:activity];
+    [dateTool setHidden: YES];
     [activity startAnimating];
+    [self.view bringSubviewToFront:activity];
     [cityBox closeOtherCombox];
-    [infoData removeAllObjects];
     [self resetScroll:1];
 
 
     NSString *server = SERVER_STRING;
-    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",@"-200",@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",SortByName],@"name_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort",[NSString stringWithFormat:@"%d",SortByPrice],@"price_sort", nil];
+    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",@"-200",@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page",nil];
 
     
 //    NSLog(@"采购清单请求参数：%@",parameters);
@@ -322,29 +329,73 @@
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-//        NSLog(@"采购清单返回内容：%@",dict);
+        NSLog(@"采购清单返回内容：%@",dict);
+        if ([infoData count] == 0) {
+            if ([[dict objectForKey:@"total"] intValue] == 0) {
+                [self showMSG:[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]];
+                return ;
+            }
+            else
+            {
+                [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
+                Total += [[dict objectForKey:@"total"] intValue];
+                //可左右滚动的表格
+                
+                if (tableView == nil) {
+                    tableView = [[XCMultiTableView alloc] initWithFrame:CGRectMake(5, filterView.frame.origin.y+filterView.frame.size.height, screenWidth-10, screenHeight-filterView.frame.origin.y-filterView.frame.size.height-44)];
+                    tableView.leftHeaderEnable = YES;
+                    tableView.datasource = self;
+                    tableView.delegate =self;
+                    tableView.tag    = 8976;
+                    tableView.isList = YES;
+                    if ([infoData count] < Total) {
+                        tableView.hasMore = YES;
+                    }
+                    [self.view addSubview:tableView];
+                }
+                else
+                {
+                    [tableView reloadData];
+                }
 
-        if ([[dict objectForKey:@"total"] intValue] == 0) {
-            [self showMSG:[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]];
-            return ;
-        }
-     [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
-        //可左右滚动的表格
-        
-        if (tableView == nil) {
-            tableView = [[XCMultiTableView alloc] initWithFrame:CGRectMake(5, filterView.frame.origin.y+filterView.frame.size.height, screenWidth-10, screenHeight-filterView.frame.origin.y-filterView.frame.size.height-44)];
-            tableView.leftHeaderEnable = YES;
-            tableView.datasource = self;
-            tableView.delegate =self;
-            tableView.tag    = 8976;
-            tableView.isList = YES;
-            [self.view addSubview:tableView];
-        }
-        else
+            }
+        }else
         {
-            [tableView reloadData];
+            if ([[dict objectForKey:@"total"] intValue] == 0) {
+//                [self showMSG:[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]];
+                return ;
+            }
+            else
+            {
+                
+                [infoData addObjectsFromArray: [dict objectForKey:@"data"]] ;
+                //可左右滚动的表格
+                
+                if (tableView == nil) {
+                    tableView = [[XCMultiTableView alloc] initWithFrame:CGRectMake(5, filterView.frame.origin.y+filterView.frame.size.height, screenWidth-10, screenHeight-filterView.frame.origin.y-filterView.frame.size.height-44)];
+                    tableView.leftHeaderEnable = YES;
+                    tableView.datasource = self;
+                    tableView.delegate =self;
+                    tableView.tag    = 8976;
+                    tableView.isList = YES;
+                    if ([infoData count] < Total) {
+                        tableView.hasMore = YES;
+                    }
+                    [self.view addSubview:tableView];
+                }
+                else
+                {
+                    [tableView reloadData];
+                }
+
+            }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+       
+        
+        
+            
+        
+          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [activity stopAnimating];
         [self showMSG:@"获取数据失败，请检查网络连接"];
         
@@ -381,6 +432,14 @@
     PriceIndex = sort;
     [self startLoadData ];
     
+}
+-(void)addMore
+{
+    if ([infoData count] < Total) {
+        page++;
+        [self startLoadData];
+        return;
+    }
 }
 -(void)addToList:(int)rowID delete:(BOOL)del
 {
