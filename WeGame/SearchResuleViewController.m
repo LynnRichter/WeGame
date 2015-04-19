@@ -555,7 +555,7 @@
     
 }
 
--(void)rowSelected:(int)rowID
+-(void)rowSelected:(int)rowID data:(NSDictionary *)item
 {
     //    if ([infoData count] < Total) {
     //        if (rowID == [infoData count]) {
@@ -566,7 +566,7 @@
     //        }
     //    }
     //
-    NSDictionary *item = [infoData objectAtIndex:rowID];
+//    NSDictionary *item = [infoData objectAtIndex:rowID];
     DetailViewController *detailVC = [[DetailViewController alloc] init];
     [detailVC setProductInfo:[item copy]];
     [detailVC setCityName:[NSString stringWithFormat:@"%@", selectCity]];

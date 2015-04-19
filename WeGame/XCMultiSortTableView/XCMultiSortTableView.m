@@ -46,10 +46,6 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
     NSMutableArray *contentDataArray;
     
 
-    
-    NSMutableArray *inList;
-    
-
     BOOL responseNumberofContentColumns;
     float ex_x ;
 
@@ -74,7 +70,6 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
         self.contentMode = UIViewContentModeRedraw;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        inList = [[NSMutableArray alloc] init];
         
         cellWidth = XCMultiTableView_DefaultCellWidth;
         cellHeight = XCMultiTableView_DefaultCellHeight;
@@ -230,7 +225,7 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
     [target selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     [target deselectRowAtIndexPath:indexPath animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [delegate rowSelected:indexPath.row];
+    [delegate rowSelected:indexPath.row data:[contentDataArray objectAtIndex:indexPath.row]];
     //直接发数据给parentviewcontroller,发送当前点击的行 的id
 
 }
@@ -618,7 +613,7 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
         }
     }else
     {
-        if ([[inList objectAtIndex:indexPath.row] integerValue] == 0) {
+        if ([[item objectForKey:@"isInUserPurchaseList"] integerValue] == 0) {
             [btnInsert setTitle:@"加入清单" forState:UIControlStateNormal];
             [btnInsert setBackgroundColor:RGBClor(255, 102, 0)];
 
@@ -689,15 +684,7 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
 
 - (void)accessDataSourceData {
     contentDataArray = [[NSMutableArray alloc] initWithArray:[datasource arrayDataForLeftHeaderInTableView:self]];
-    for (int i = 0; i<contentDataArray.count; i++) {
-        if ([[[contentDataArray objectAtIndex:i] objectForKey:@"isInUserPurchaseList"] integerValue] == 0) {
-            [inList addObject:@"0"];
-        }
-        else
-        {
-             [inList addObject:@"1"];
-        }
-    }
+    
 }
 
 
@@ -724,7 +711,10 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
             [touchRow setBackgroundColor:RGBClor(255, 102, 0)];
             [touchRow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         }
-        [inList insertObject:@"0" atIndex:touchRow.tag];
+        NSMutableDictionary *item = [NSMutableDictionary dictionaryWithDictionary:[contentDataArray objectAtIndex:touchRow.tag]] ;
+        [item setObject:@"0"  forKey:@"isInUserPurchaseList"];
+        [contentDataArray insertObject:item atIndex:touchRow.tag];
+//        [inList insertObject:atIndex:touchRow.tag];
 
         [delegate addToList:touchRow.tag delete:YES];
 
@@ -735,7 +725,9 @@ typedef NS_ENUM(NSUInteger, TableColumnSortType) {
         [touchRow setBackgroundColor:RGBClor(239,239,239)];
         [touchRow setTitle:@"移除清单" forState:UIControlStateNormal];
         [touchRow setTitleColor:RGBClor(95, 95, 95) forState:UIControlStateNormal];
-        [inList insertObject:@"1" atIndex:touchRow.tag];
+        NSMutableDictionary *item = [NSMutableDictionary dictionaryWithDictionary:[contentDataArray objectAtIndex:touchRow.tag]] ;
+        [item setObject:@"1"  forKey:@"isInUserPurchaseList"];
+        [contentDataArray insertObject:item atIndex:touchRow.tag];
 
         [delegate addToList:touchRow.tag delete:NO];
 

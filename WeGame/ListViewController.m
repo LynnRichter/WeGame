@@ -58,7 +58,7 @@
     UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [searchButton setImage:[UIImage imageNamed:@"refresh_ico.png" ] forState:UIControlStateNormal];
     [searchButton setFrame:CGRectMake(screenWidth-22-10, 33, 22, 22)];
-    [searchButton addTarget:self action:@selector(startLoadData) forControlEvents:UIControlEventTouchUpInside];
+    [searchButton addTarget:self action:@selector(startSearch) forControlEvents:UIControlEventTouchUpInside];
     [topBackView addSubview:searchButton];
 
     
@@ -91,7 +91,7 @@
     searchBtn.layer.cornerRadius = 8;
     [searchBtn.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
     [self.view addSubview:searchBtn];
-    [searchBtn addTarget:self action:@selector(startLoadData) forControlEvents:UIControlEventTouchUpInside];
+    [searchBtn addTarget:self action:@selector(startSearch) forControlEvents:UIControlEventTouchUpInside];
     
     
     trendY = vLine3.frame.origin.y+vLine3.frame.size.height;
@@ -296,6 +296,7 @@
 }
 -(void)startSearch
 {
+    NSLog(@"========wtf===========");
     page=1;
     Total = 0;
     [infoData removeAllObjects];
@@ -316,7 +317,7 @@
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",@"-200",@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page",nil];
 
     
-//    NSLog(@"采购清单请求参数：%@",parameters);
+    NSLog(@"采购清单请求参数：%@",parameters);
     // GET请求
     __block NSDictionary *dict = [[NSDictionary alloc] init];
     
@@ -329,7 +330,7 @@
         NSString *html = operation.responseString;
         NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
         dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-        NSLog(@"采购清单返回内容：%@",dict);
+//        NSLog(@"采购清单返回内容：%@",dict);
         if ([infoData count] == 0) {
             if ([[dict objectForKey:@"total"] intValue] == 0) {
                 [self showMSG:[NSString stringWithFormat:@"%@",[dict objectForKey:@"data"]]];
@@ -469,9 +470,9 @@
         }];
     
 }
--(void)rowSelected:(int)rowID
+-(void)rowSelected:(int)rowID data:(NSDictionary *)item
 {
-    NSDictionary *item = [infoData objectAtIndex:rowID];
+//    NSDictionary *item = [infoData objectAtIndex:rowID];
     DetailViewController *detailVC = [[DetailViewController alloc] init];
     [detailVC setProductInfo:[item copy]];
     [detailVC setCityName:[NSString stringWithFormat:@"%@", @"深圳"]];

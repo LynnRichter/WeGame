@@ -432,7 +432,7 @@
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
 //    NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str", selectDate,@"date",selectTypeID,@"productCategoryid",selectCityID,@"cityid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%d",PriceIndex],@"price_index",[NSString stringWithFormat:@"%d",page],@"page", nil];
 
-    NSLog(@"请求数据：%@",parameters);
+//    NSLog(@"请求数据：%@",parameters);
 
     // GET请求
     __block NSDictionary *dict = [[NSDictionary alloc] init];
@@ -555,7 +555,7 @@
             NSString *html = operation.responseString;
             NSData* data=[html dataUsingEncoding:NSUTF8StringEncoding];
             dict=(NSDictionary*)[NSJSONSerialization  JSONObjectWithData:data options:0 error:nil];
-            NSLog(@"info = %@",dict);
+//            NSLog(@"info = %@",dict);
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -567,10 +567,10 @@
     
 }
 
--(void)rowSelected:(int)rowID
+-(void)rowSelected:(int)rowID data:(NSDictionary *)item
 {
 
-    NSDictionary *item = [infoData objectAtIndex:rowID];
+
     DetailViewController *detailVC = [[DetailViewController alloc] init];
     [detailVC setProductInfo:[item copy]];
     [detailVC setCityName:[NSString stringWithFormat:@"%@", selectCity]];

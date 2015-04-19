@@ -434,7 +434,7 @@
             NSLog(@"我跳出了死循环");
             break;
         }
-        [NSThread sleepForTimeInterval:2];
+        [NSThread sleepForTimeInterval:5];
     }
 
    

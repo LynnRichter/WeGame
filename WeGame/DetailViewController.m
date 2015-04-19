@@ -412,7 +412,7 @@
 {
     [activity startAnimating];
     NSDictionary *parameters = [[NSDictionary alloc ] initWithObjectsAndKeys:server,@"server_str",CLIENT_STRING,@"client_str",[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"productId"]],@"productid",[WeGameHelper getString:@"UserID"],@"userid",[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"cityid"]],@"cityid",nil];
-    NSLog(@"历史价格请求数据：%@",parameters);
+//    NSLog(@"历史价格请求数据：%@",parameters);
     __block NSDictionary * dict = [[NSDictionary alloc] init];
     [manager GET: [PRICE_HISTORY stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //  请求成功时的操作

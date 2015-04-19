@@ -60,7 +60,7 @@ typedef NS_ENUM(NSUInteger, SortColumnType) {
 -(void)sortByName:(int)sort;
 -(void)sortByPrice:(int)sort;
 -(void)addToList:(int)rowID delete:(BOOL)del;
--(void)rowSelected:(int)rowID;
+-(void)rowSelected:(int)rowID data:(NSDictionary*)item;
 -(void)addMore;
 
 @end
