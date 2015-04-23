@@ -8,7 +8,7 @@
 
 #import "SupportViewController.h"
 
-@interface SupportViewController ()
+@interface SupportViewController ()<TabClickDelegate>
 
 @end
 
@@ -33,6 +33,7 @@ AFHTTPRequestOperationManager *manager;
     infoData = [[NSMutableArray alloc] initWithCapacity:0];
     first = true;
     [self UIFactory];
+    NSLog(@"viewDidLoad");
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -604,6 +605,19 @@ AFHTTPRequestOperationManager *manager;
     hud.removeFromSuperViewOnHide = YES;
     
     [hud hide:YES afterDelay:2];
+    
+}
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    if (!first) {
+//        selectTypeID = @"";
+//        [self startClick];
+//    }
+//}
+-(void)sendTouch
+{
+            selectTypeID = @"";
+            [self startClick];
     
 }
 @end

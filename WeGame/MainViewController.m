@@ -308,6 +308,7 @@
 -(void)jumpTabbarView:(int)tag
 {
     UITabBarController *mainViewController = [[UITabBarController alloc] init];
+    [mainViewController setDelegate:self];
 
     UIImageView *tab = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bottom_back.png"]];
     tab.frame= CGRectMake(0, 0, screenWidth, 49);
@@ -327,6 +328,8 @@
     supportViewController.title = @"找供应商";
     supportViewController.tabBarItem.image =[UIImage imageNamed:@"menu_ico_b.png"];
     supportViewController.tabBarItem.selectedImage = [UIImage imageNamed:@"menu_ico_b_on.png"];
+
+    [self setClickDelegate:supportViewController];
     
     ListViewController *vipViewController = [[ListViewController alloc] init];
     vipViewController.title = @"采购清单";
@@ -362,6 +365,14 @@
 
     
 }
+-(void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    if (tabBarController.selectedIndex == 1 ){
+        [self.clickDelegate sendTouch];
+    }
+
+}
+
 #pragma mark - 实现取消按钮的方法
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder]; // 丢弃第一使用者
@@ -408,31 +419,17 @@
         [cityButton setTitle:@"深圳" forState:UIControlStateNormal];
     }];
     
-//    NSString *server = SERVER_STRING;
-//    NSString *URL = [NSString stringWithFormat:@"%@?server_str=%@&client_str=%@&ip=%@",GETCITY,server,CLIENT_STRING,HTML];
-//    NSLog(@"URL String = %@",URL);
-//    
-//    NSURLRequest *request2 = [NSURLRequest requestWithURL:[NSURL URLWithString:[URL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-//
-//    AFHTTPRequestOperation *operation2 = [[AFHTTPRequestOperation alloc] initWithRequest:request2];
-//    [operation2 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSString *html = operation.responseString;
-//        NSLog(@"获取到的城市信息为：%@",html);
-//    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        [cityButton setTitle:@"深圳" forState:UIControlStateNormal];
-//    }];
-    
+
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-//    [queue addOperation:operation2];
     [queue addOperation:operation];
-   
+    
     while (true) {
         NSLog(@"我只行了死循环");
         if (![HTML isEqualToString:@""]) {
             
             [self getCity:HTML];
             NSLog(@"我跳出了死循环");
-            break;
+            return;
         }
         [NSThread sleepForTimeInterval:5];
     }
@@ -451,7 +448,7 @@
 
 //    NSString *URL = [NSString stringWithFormat:@"%@?server_str=%@&client_str=%@&ip=%@",GETCITY,server,CLIENT_STRING,IP];
 //    NSLog(@"URL String = %@",URL);
-    NSLog(@"请求数据：%@",parameters);
+//    NSLog(@"请求数据：%@",parameters);
     [manager GET: [GETCITY stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] parameters: parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //  请求成功时的操作
         NSString *html = operation.responseString;

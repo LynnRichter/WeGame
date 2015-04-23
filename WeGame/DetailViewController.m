@@ -207,7 +207,7 @@
     
     UILabel *priceIndex = [[UILabel alloc] initWithFrame:CGRectMake(priceIndexLb.frame.size.width+priceIndexLb.frame.origin.x+5, 5, screenWidth-priceIndexLb.frame.size.width+priceIndexLb.frame.origin.x-10, cellHeight-2*5)];
     [priceIndex setFont:contentFont];
-    [priceIndex setTextColor:[UIColor redColor]];
+    [priceIndex setTextColor:RGBClor(167, 0, 177)];
 //    [priceIndex setText:[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]]];
     if([NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]] == nil ||[[NSString stringWithFormat:@"%@",[ProductInfo objectForKey:@"priceIndex"]] isEqualToString:@"<null>"] )
     {

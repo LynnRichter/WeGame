@@ -16,10 +16,15 @@
 #import "ServiceViewController.h"
 #import "AFNetworking.h"
 #import "SearchResuleViewController.h"
-
 #import "WeGameHelper.h"
 
-@interface MainViewController : UIViewController<UISearchBarDelegate>
+@protocol TabClickDelegate <NSObject>
+
+-(void)sendTouch;
+
+@end
+
+@interface MainViewController : UIViewController<UISearchBarDelegate,UITabBarControllerDelegate>
 {
     float screenWidth;
     float screenHeight;
@@ -27,6 +32,10 @@
     UISearchBar *oneSearchBar;
     NSString *HTML;
 
+    
 }
+@property (nonatomic, weak)id<TabClickDelegate> clickDelegate;
+
+
 
 @end
