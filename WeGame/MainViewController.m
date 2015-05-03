@@ -407,21 +407,31 @@
 
 -(void)getIP
 {
-    NSString *str=[NSString stringWithFormat:GETIP];
-    NSURL *url = [NSURL URLWithString:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSString *html = operation.responseString;
-        NSLog(@"获取到的IP为：%@",html);
-        HTML = [html stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [cityButton setTitle:@"深圳" forState:UIControlStateNormal];
-    }];
+    @try {
+        NSString *str=[NSString stringWithFormat:GETIP];
+        NSURL *url = [NSURL URLWithString:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSString *html = operation.responseString;
+            NSLog(@"获取到的IP为：%@",html);
+            HTML = [html stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+        }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [cityButton setTitle:@"深圳" forState:UIControlStateNormal];
+        }];
+        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+        [queue addOperation:operation];
+
+
+    }
+    @catch (NSException *exception) {
+        HTML = @"27.38.32.35";
+    }
+    @finally {
+        
+    }
     
 
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [queue addOperation:operation];
     
     while (true) {
         NSLog(@"我只行了死循环");
@@ -429,10 +439,11 @@
             
             [self getCity:HTML];
             NSLog(@"我跳出了死循环");
-            return;
+            break;
         }
         [NSThread sleepForTimeInterval:5];
     }
+
 
    
 }
@@ -474,4 +485,5 @@
 //        }
 //    }
 //}
+
 @end

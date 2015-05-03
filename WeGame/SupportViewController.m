@@ -69,7 +69,7 @@ AFHTTPRequestOperationManager *manager;
     UILabel *title =[[UILabel alloc]  initWithFrame:CGRectMake((screenWidth-150)/2, 24, 150, 40)];
     [title setTextAlignment:NSTextAlignmentCenter];
     UIFont *titleFont = [UIFont fontWithName:@"Helvetica-Bold" size:18];
-    [title setText:@"供应商大全"];
+    [title setText:@"找供应商"];
     [title setFont:titleFont];
     [title setTextColor:[UIColor whiteColor]];
     [self.view addSubview:title];
